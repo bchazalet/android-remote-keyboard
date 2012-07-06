@@ -14,23 +14,28 @@ import subprocess
 def main():
 	# Listen for user input including ENTER
 	print 'Input your text'
-	while(True):
-		user_input = raw_input('')
-		# Split sentence into words
-		words = user_input.split(' ');
+	try:
+		while(True):
+			process_input()
 
-		# loop on all words
-		for word in words:
-			# Call adb shell input
-			send_word(word)
-			send_space()
+	except KeyboardInterrupt: #Ctrl-C
+		print "\nCtrl^C received --> dying now"
+	
 
-		send_key(22) # Right
-		send_enter()
-		send_key(21)	
+def process_input():
+	user_input = raw_input('')
+	# Split sentence into words
+	words = user_input.split(' ');
 
-#		break
+	# loop on all words
+	for word in words:
+		# Call adb shell input
+		send_word(word)
+		send_space()
 
+	send_key(22) # Right to reach the Send button
+	send_enter() # ENTER to push the Send button
+	send_key(21) # Left to give the focus back to the text input
 
 def send_space():
 	send_key(62)
