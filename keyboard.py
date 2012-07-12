@@ -13,7 +13,7 @@ def main():
 	print 'Input your text'
 	global adb
 	# Needs the stdout PIPE otherwise gets automatically redirected in my stdout
-	adb = subprocess.Popen(["adb", "shell"], shell=False, stdin=subprocess.PIPE) #, stdout=subprocess.PIPE)
+	adb = subprocess.Popen(["adb", "shell"], shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 	try:
 		while(True):
 			process_input()
@@ -57,25 +57,26 @@ def send_key(key):
 
 def send_word(text):
 	# we need to escape ' " ( )
-	escape_chars = [("'",75), ('"',65), (')',71), ('(',72)]
-	escape_and_send(text, escape_chars)
+	adb.stdin.write("input text %s\n" % text)
+#	escape_chars = [("'",75), ('"',65), (')',71), ('(',72)]
+#	escape_and_send(text, escape_chars)
 
-def escape_and_send(text, escape_chars):
-	print "# of chars = %d" % len(escape_chars)
-	# if there is no more chars to escape
-	if len(escape_chars) == 0:
-		adb.stdin.write("input text %s\n" % text)
-		print "done %s" % text
-		return
-
-	char = escape_chars.pop()
-	text_split = text.split(char[0])
-	if len(text_split) == 1:
-		print "can't find the char %s" % char[0]
-		escape_and_send(text, escape_chars)
-	else:
-		for txt in text_split:
-			escape_and_send(text, escape_chars)
+#def escape_and_send(text, escape_chars):
+#	print "# of chars = %d" % len(escape_chars)
+#	# if there is no more chars to escape
+#	if len(escape_chars) == 0:
+#		adb.stdin.write("input text %s\n" % text)
+#		print "done %s" % text
+#		return
+#
+#	char = escape_chars.pop()
+#	text_split = text.split(char[0])
+#	if len(text_split) == 1:
+#		print "can't find the char %s" % char[0]
+#		escape_and_send(text, escape_chars)
+#	else:
+#		for txt in text_split:
+#			escape_and_send(text, escape_chars)
 
 
 if __name__ == '__main__':
