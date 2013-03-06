@@ -27,7 +27,7 @@ def process_input():
 	user_input = raw_input('')
 	# If input is empty or only is ENTER
 	if not user_input or user_input == "\n":
-		return 
+		return
 	# Split sentence into words
 	words = user_input.split(' ');
 
@@ -43,7 +43,7 @@ def send_eol_combo():
 	send_key(22) # Right to reach the Send button
 	send_enter() # ENTER to push the Send button
 	send_key(21) # Left to give the focus back to the text input
-	return	
+	return
 
 def send_space():
 	send_key(62)
@@ -56,28 +56,17 @@ def send_key(key):
 	adb.stdin.write("input keyevent %d\n" % key)
 
 def send_word(text):
-	# we need to escape ' " ( )
+	# Escape characters that adb doesn't like 
+	escape_chars = {
+			"'": "\\'",
+			'"': '\\"',
+			"(": "\\(",
+			")": "\\)"
+	}
+	for key, value in escape_chars.iteritems():
+		text = text.replace(key, value)
+	# Send the escaped text to adb
 	adb.stdin.write("input text %s\n" % text)
-#	escape_chars = [("'",75), ('"',65), (')',71), ('(',72)]
-#	escape_and_send(text, escape_chars)
-
-#def escape_and_send(text, escape_chars):
-#	print "# of chars = %d" % len(escape_chars)
-#	# if there is no more chars to escape
-#	if len(escape_chars) == 0:
-#		adb.stdin.write("input text %s\n" % text)
-#		print "done %s" % text
-#		return
-#
-#	char = escape_chars.pop()
-#	text_split = text.split(char[0])
-#	if len(text_split) == 1:
-#		print "can't find the char %s" % char[0]
-#		escape_and_send(text, escape_chars)
-#	else:
-#		for txt in text_split:
-#			escape_and_send(text, escape_chars)
-
 
 if __name__ == '__main__':
 	main()
